@@ -34,12 +34,15 @@ export async function runPostHook(): Promise<void> {
 	const config = loadConfig();
 	const allRules = loadAllRules();
 	const newRules = learnRules(input, config.templates, allRules);
+	const messages: string[] = [];
 	for (const rule of newRules) {
 		addRule(rule);
 		await log("post-hook:rule-added", rule);
-		process.stderr.write(
-			`[cc-permission] rule added: ${rule.pattern} (${rule.action})\n`,
-		);
+		messages.push(`[cc-permission] rule added: ${rule.pattern} (${rule.action})`);
 	}
-	process.stdout.write("{}");
+	const output: Record<string, string> = {};
+	if (messages.length > 0) {
+		output.systemMessage = messages.join("\n");
+	}
+	process.stdout.write(JSON.stringify(output));
 }
