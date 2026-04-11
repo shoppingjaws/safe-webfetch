@@ -1,20 +1,26 @@
 {
-	"name": "template-bun",
-	"module": "index.ts",
+	"name": "cc-permission",
+	"module": "src/cli.ts",
 	"type": "module",
-	"private": true,
-  "scripts": {
-    "test": "docker build -f Dockerfile.test -t template-bun-test . && docker run --rm template-bun-test",
-    "format": "biome format --write",
+	"bin": {
+		"cc-permission": "src/cli.ts"
+	},
+	"scripts": {
+		"test": "docker build -f Dockerfile.test -t cc-permission-test . && docker run --rm cc-permission-test",
+		"format": "biome format --write",
 		"format:check": "biome format",
 		"lint": "biome lint --fix",
 		"lint:check": "biome lint",
-		"typecheck": "tsc --noEmit"
-  },
+		"typecheck": "tsc --noEmit",
+		"build": "bun build src/cli.ts --compile --outfile dist/cc-permission"
+	},
 	"devDependencies": {
 		"@types/bun": "latest"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
+	},
+	"dependencies": {
+		"json5": "^2.2.3"
 	}
 }
