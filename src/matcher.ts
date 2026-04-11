@@ -16,7 +16,7 @@ function globToRegex(pattern: string): RegExp {
 	let regex = "";
 	let i = 0;
 	while (i < pattern.length) {
-		const char = pattern[i]!;
+		const char = pattern.charAt(i);
 		if (char === "*" && pattern[i + 1] === "*") {
 			i += 2;
 			if (regex.endsWith("/")) regex = regex.slice(0, -1);
