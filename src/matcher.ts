@@ -8,7 +8,7 @@ export interface HookInput {
 export interface HookOutput {
 	decision?: "allow" | "deny";
 	reason?: string;
-	/** マッチしたルールのパターン（ログ用、JSON出力には含めない） */
+	/** Matched rule pattern (for logging, not included in JSON output) */
 	matchedPattern?: string;
 }
 

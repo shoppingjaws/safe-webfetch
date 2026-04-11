@@ -81,7 +81,7 @@ export function addPermissionPattern(pattern: string): void {
 
 const defaultConfig = `{
   templates: [
-    // GitHub: org単位で許可 + raw.githubusercontent.com も自動追加
+    // GitHub: allow per org + auto-add raw.githubusercontent.com
     {
       match: "https://github.com/{org}/**",
       generate: [
@@ -89,12 +89,12 @@ const defaultConfig = `{
         "https://raw.githubusercontent.com/{org}/**",
       ],
     },
-    // docs.* 系ドキュメントサイト（AWS, Datadog, GCP 等）
+    // docs.* documentation sites (AWS, Datadog, GCP, etc.)
     {
       match: "https://docs.{domain}/**",
       generate: ["https://docs.{domain}/**"],
     },
-    // npm: パッケージ単位で許可
+    // npm: allow per package
     {
       match: "https://www.npmjs.com/package/{pkg}/**",
       generate: [
@@ -102,7 +102,7 @@ const defaultConfig = `{
         "https://registry.npmjs.org/{pkg}/**",
       ],
     },
-    // npm: スコープ付きパッケージ (@org/pkg)
+    // npm: scoped packages (@org/pkg)
     {
       match: "https://www.npmjs.com/package/@{scope}/{pkg}/**",
       generate: [
@@ -110,12 +110,12 @@ const defaultConfig = `{
         "https://registry.npmjs.org/@{scope}/{pkg}/**",
       ],
     },
-    // PyPI: パッケージ単位で許可
+    // PyPI: allow per package
     {
       match: "https://pypi.org/project/{pkg}/**",
       generate: ["https://pypi.org/project/{pkg}/**"],
     },
-    // crates.io: クレート単位で許可 + docs.rs も自動追加
+    // crates.io: allow per crate + auto-add docs.rs
     {
       match: "https://crates.io/crates/{crate}/**",
       generate: [
@@ -123,7 +123,7 @@ const defaultConfig = `{
         "https://docs.rs/{crate}/**",
       ],
     },
-    // pkg.go.dev: モジュール単位で許可
+    // pkg.go.dev: allow per module
     {
       match: "https://pkg.go.dev/{module}/**",
       generate: ["https://pkg.go.dev/{module}/**"],
