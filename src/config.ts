@@ -5,8 +5,6 @@ import { homedir } from "node:os";
 
 export interface Rule {
 	pattern: string;
-	action: "allow" | "deny";
-	reason?: string;
 }
 
 export interface Template {
@@ -15,7 +13,7 @@ export interface Template {
 }
 
 export interface Config {
-	rules: Rule[];
+	rules: string[];
 	templates: Template[];
 }
 
@@ -43,7 +41,7 @@ export function loadConfig(): Config {
 	return {
 		rules: parsed.rules ?? [],
 		templates: parsed.templates ?? [],
-	};
+	} satisfies Config;
 }
 
 export function loadPermission(): Rule[] {
@@ -53,12 +51,13 @@ export function loadPermission(): Rule[] {
 	}
 	const content = readFileSync(path, "utf-8");
 	const parsed = JSON.parse(content) as { rules?: string[] };
-	return (parsed.rules ?? []).map((pattern) => ({ pattern, action: "allow" as const }));
+	return (parsed.rules ?? []).map((pattern) => ({ pattern }));
 }
 
 export function loadAllRules(): Rule[] {
 	const config = loadConfig();
-	return [...config.rules, ...loadPermission()];
+	const configRules = config.rules.map((pattern) => ({ pattern }));
+	return [...configRules, ...loadPermission()];
 }
 
 export function addPermissionPattern(pattern: string): void {

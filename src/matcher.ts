@@ -6,8 +6,7 @@ export interface HookInput {
 }
 
 export interface HookOutput {
-	decision?: "allow" | "deny";
-	reason?: string;
+	decision?: "allow";
 	/** Matched rule pattern (for logging, not included in JSON output) */
 	matchedPattern?: string;
 }
@@ -43,14 +42,10 @@ export function matchRule(input: HookInput, rules: Rule[]): HookOutput {
 		for (const value of Object.values(input.tool_input)) {
 			if (typeof value !== "string") continue;
 			if (regex.test(value)) {
-				const result: HookOutput = {
-					decision: rule.action,
+				return {
+					decision: "allow",
 					matchedPattern: rule.pattern,
 				};
-				if (rule.action === "deny" && rule.reason) {
-					result.reason = rule.reason;
-				}
-				return result;
 			}
 		}
 	}

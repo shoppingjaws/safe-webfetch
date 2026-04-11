@@ -15,11 +15,11 @@ It also features **template learning** — once you approve a URL, the tool extr
 ## How it works
 
 ```
-PreToolUse hook   → match rules → allow / deny / pass (no match)
+PreToolUse hook   → match rules → allow / pass (no match)
 PostToolUse hook  → template learning → append new rules to permission.json
 ```
 
-- **PreToolUse**: Evaluates rules from `config.json5` (manual) then `permission.json` (auto-generated). The first matching rule wins.
+- **PreToolUse**: Evaluates rules from `config.json5` (manual) then `permission.json` (auto-generated). If a rule matches, the request is allowed. If no rule matches, Claude Code shows its normal permission prompt.
 - **PostToolUse**: Extracts placeholders from approved URLs using template definitions and generates new allow rules.
 
 ## Installation
@@ -57,10 +57,9 @@ Config files live in `$XDG_CONFIG_HOME/cc-permission/` (defaults to `~/.config/c
 
 ```json5
 {
-  // Manual rules: glob pattern matching
+  // Manual rules: glob pattern matching (matched URLs are auto-allowed)
   rules: [
-    { pattern: "https://docs.example.com/**", action: "allow" },
-    { pattern: "https://malicious.example.com/**", action: "deny", reason: "blocked" },
+    "https://docs.example.com/**",
   ],
 
   // Templates: used for auto-learning in PostToolUse
@@ -106,7 +105,7 @@ Template `{placeholder}` captures a single path segment (no `/`) and expands it 
 1. `config.json5` `rules` (manual)
 2. `permission.json` `rules` (auto-generated)
 
-First match wins. If no rule matches, Claude Code shows its normal permission prompt.
+If a rule matches, the request is allowed. If no rule matches, Claude Code shows its normal permission prompt.
 
 ## Default templates
 

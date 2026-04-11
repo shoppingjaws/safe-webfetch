@@ -92,10 +92,7 @@ export function learnRules(
 
 			for (const generatePattern of learn.generate) {
 				const pattern = fillTemplate(generatePattern, placeholders);
-				const rule: Rule = {
-					pattern,
-					action: "allow",
-				};
+				const rule: Rule = { pattern };
 				if (!ruleExists(rule, existingRules) && !ruleExists(rule, newRules)) {
 					newRules.push(rule);
 				}

@@ -26,26 +26,6 @@ describe("hook (PreToolUse)", () => {
 		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
 	});
 
-	test("denies matching config rule with reason", async () => {
-		ctx.writeConfig({
-			rules: [
-				{
-					pattern: "https://evil.example.com/**",
-					action: "deny",
-					reason: "blocked",
-				},
-			],
-			templates: [],
-		});
-
-		const { stdout } = await ctx.runHook({
-			tool_name: "WebFetch",
-			tool_input: { url: "https://evil.example.com/something" },
-		});
-
-		expect(JSON.parse(stdout)).toEqual({ decision: "deny", reason: "blocked" });
-	});
-
 	test("returns empty for non-matching URL", async () => {
 		ctx.writeConfig({ templates: [] });
 		ctx.writePermission({
