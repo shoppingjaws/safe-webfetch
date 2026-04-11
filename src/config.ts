@@ -58,21 +58,16 @@ export function loadAllRules(): Rule[] {
 	return loadPermission();
 }
 
-export function addRule(rule: Rule): { error?: string } {
-	try {
-		const rules = loadPermission();
-		rules.push(rule);
-		const dir = getConfigDir();
-		mkdirSync(dir, { recursive: true });
-		writeFileSync(
-			getPermissionPath(),
-			JSON.stringify({ rules }, null, 2),
-			"utf-8",
-		);
-		return {};
-	} catch (e) {
-		return { error: String(e) };
-	}
+export function addRule(rule: Rule): void {
+	const rules = loadPermission();
+	rules.push(rule);
+	const dir = getConfigDir();
+	mkdirSync(dir, { recursive: true });
+	writeFileSync(
+		getPermissionPath(),
+		JSON.stringify({ rules }, null, 2),
+		"utf-8",
+	);
 }
 
 const defaultConfig = `{
@@ -89,26 +84,13 @@ const defaultConfig = `{
 }
 `;
 
-export function initConfig(): {
-	created: boolean;
-	path: string;
-	permissionCreated: boolean;
-	permissionPath: string;
-} {
+export function initConfig(): { created: boolean; path: string } {
 	const dir = getConfigDir();
-	mkdirSync(dir, { recursive: true });
-
 	const path = getConfigPath();
-	const created = !existsSync(path);
-	if (created) {
-		writeFileSync(path, defaultConfig, "utf-8");
+	if (existsSync(path)) {
+		return { created: false, path };
 	}
-
-	const permissionPath = getPermissionPath();
-	const permissionCreated = !existsSync(permissionPath);
-	if (permissionCreated) {
-		writeFileSync(permissionPath, JSON.stringify({ rules: [] }, null, 2), "utf-8");
-	}
-
-	return { created, path, permissionCreated, permissionPath };
+	mkdirSync(dir, { recursive: true });
+	writeFileSync(path, defaultConfig, "utf-8");
+	return { created: true, path };
 }
