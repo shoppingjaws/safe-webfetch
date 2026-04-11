@@ -12,24 +12,27 @@
 		]
 	},
 	"hooks": {
+		"PreToolUse": [
+			{
+				"matcher": "",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "cc-permission hook"
+					}
+				]
+			}
+		],
 		"PostToolUse": [
-      {
-        "matcher": "Bash(container-use checkout:*)",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun run format"
-          },
-          {
-            "type": "command",
-            "command": "bun run lint"
-          },
-          {
-            "type": "command",
-            "command": "bun run typecheck"
-          }
-        ]
-      }
-    ]
+			{
+				"matcher": "",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "cc-permission post-hook"
+					}
+				]
+			}
+		]
 	}
 }
