@@ -81,14 +81,27 @@ export function addPermissionPattern(pattern: string): void {
 
 const defaultConfig = `{
   templates: [
-    // Example:
-    // {
-    //   match: "https://github.com/{org}/**",
-    //   generate: [
-    //     "https://github.com/{org}/**",
-    //     "https://raw.githubusercontent.com/{org}/**",
-    //   ],
-    // },
+    // GitHub: org単位で許可 + raw.githubusercontent.com も自動追加
+    {
+      match: "https://github.com/{org}/**",
+      generate: [
+        "https://github.com/{org}/**",
+        "https://raw.githubusercontent.com/{org}/**",
+      ],
+    },
+    // docs.* 系ドキュメントサイト（AWS, Datadog, GCP 等）
+    {
+      match: "https://docs.{domain}/**",
+      generate: ["https://docs.{domain}/**"],
+    },
+    // npm: パッケージ単位で許可
+    {
+      match: "https://www.npmjs.com/package/{pkg}/**",
+      generate: [
+        "https://www.npmjs.com/package/{pkg}/**",
+        "https://registry.npmjs.org/{pkg}/**",
+      ],
+    },
   ],
 }
 `;
