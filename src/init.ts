@@ -85,6 +85,11 @@ export function runInit(): void {
 	} else {
 		console.log(`Config already exists: ${configResult.path}`);
 	}
+	if (configResult.permissionCreated) {
+		console.log(`Created permission: ${configResult.permissionPath}`);
+	} else {
+		console.log(`Permission already exists: ${configResult.permissionPath}`);
+	}
 
 	const hookResult = registerHooks();
 	if (hookResult.preRegistered) {

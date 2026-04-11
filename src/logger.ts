@@ -1,12 +1,12 @@
 import { mkdir, rename, unlink } from "node:fs/promises";
 import { join } from "node:path";
-import { getConfigDir } from "./config.ts";
 
 const MAX_LOG_SIZE = 1 * 1024 * 1024; // 1MB
 const MAX_LOG_FILES = 3;
+const LOG_DIR = "/tmp/cc-permission";
 
 export function getLogPath(): string {
-	return join(getConfigDir(), "cc-permission.log");
+	return join(LOG_DIR, "cc-permission.log");
 }
 
 function formatTimestamp(): string {
@@ -34,17 +34,21 @@ export async function rotateLog(logPath: string): Promise<void> {
 }
 
 export async function log(label: string, data: unknown): Promise<void> {
-	const dir = getConfigDir();
-	await mkdir(dir, { recursive: true });
+	try {
+		const dir = LOG_DIR;
+		await mkdir(dir, { recursive: true });
 
-	const logPath = getLogPath();
-	const file = Bun.file(logPath);
+		const logPath = getLogPath();
+		const file = Bun.file(logPath);
 
-	if (file.size >= MAX_LOG_SIZE) {
-		await rotateLog(logPath);
+		if (file.size >= MAX_LOG_SIZE) {
+			await rotateLog(logPath);
+		}
+
+		const line = `[${formatTimestamp()}] [${label}] ${JSON.stringify(data)}\n`;
+		const existing = (await file.exists()) ? await file.text() : "";
+		await Bun.write(logPath, existing + line);
+	} catch {
+		// Ignore log write failures to avoid crashing the hook
 	}
-
-	const line = `[${formatTimestamp()}] [${label}] ${JSON.stringify(data)}\n`;
-	const existing = (await file.exists()) ? await file.text() : "";
-	await Bun.write(logPath, existing + line);
 }
