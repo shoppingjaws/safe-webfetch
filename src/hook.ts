@@ -14,10 +14,10 @@ async function readStdin(): Promise<string> {
 export async function runHook(): Promise<void> {
 	const raw = await readStdin();
 	const input: HookInput = JSON.parse(raw);
-	log("hook:input", input);
+	await log("hook:input", input);
 	const allRules = loadAllRules();
 	const result = matchRule(input, allRules);
-	log("hook:result", result);
+	await log("hook:result", result);
 	if (result.decision === "allow") {
 		process.stderr.write(
 			`[cc-permission] auto-allowed: ${input.tool_name} (${result.matchedPattern})\n`,
@@ -30,13 +30,13 @@ export async function runHook(): Promise<void> {
 export async function runPostHook(): Promise<void> {
 	const raw = await readStdin();
 	const input: HookInput = JSON.parse(raw);
-	log("post-hook:input", input);
+	await log("post-hook:input", input);
 	const config = loadConfig();
 	const allRules = loadAllRules();
 	const newRules = learnRules(input, config.templates, allRules);
 	for (const rule of newRules) {
 		addRule(rule);
-		log("post-hook:rule-added", rule);
+		await log("post-hook:rule-added", rule);
 		process.stderr.write(
 			`[cc-permission] rule added: ${rule.tool} ${rule.match.field}=${rule.match.pattern} (${rule.action})\n`,
 		);

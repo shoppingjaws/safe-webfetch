@@ -17,7 +17,7 @@ bun run format            # biome format --write
 bun run build             # compile to dist/cc-permission
 ```
 
-Dockerでテスト: `bun run test` (package.json の test script は Docker 経由)
+`bun run test` でローカル実行
 
 ## Architecture
 

@@ -1,5 +1,7 @@
 import { describe, expect, test, beforeEach } from "bun:test";
+import { join } from "node:path";
 import { createTestContext, type TestContext } from "./test-helpers.ts";
+import { rotateLog } from "./logger.ts";
 
 let ctx: TestContext;
 
@@ -275,5 +277,53 @@ describe("post-hook (PostToolUse)", () => {
 			tool_input: { url: "https://github.com/xxx/another-repo" },
 		});
 		expect(JSON.parse(after.stdout)).toEqual({ decision: "allow" });
+	});
+});
+
+describe("log rotation", () => {
+	test("rotates current log to .1", async () => {
+		const logPath = join(ctx.configDir, "test.log");
+		const { mkdir } = await import("node:fs/promises");
+		await mkdir(ctx.configDir, { recursive: true });
+		await Bun.write(logPath, "original content");
+
+		await rotateLog(logPath);
+
+		expect(await Bun.file(logPath).exists()).toBe(false);
+		expect(await Bun.file(`${logPath}.1`).text()).toBe("original content");
+	});
+
+	test("shifts existing rotated files", async () => {
+		const logPath = join(ctx.configDir, "test.log");
+		const { mkdir } = await import("node:fs/promises");
+		await mkdir(ctx.configDir, { recursive: true });
+		await Bun.write(logPath, "current");
+		await Bun.write(`${logPath}.1`, "prev1");
+		await Bun.write(`${logPath}.2`, "prev2");
+
+		await rotateLog(logPath);
+
+		expect(await Bun.file(logPath).exists()).toBe(false);
+		expect(await Bun.file(`${logPath}.1`).text()).toBe("current");
+		expect(await Bun.file(`${logPath}.2`).text()).toBe("prev1");
+		expect(await Bun.file(`${logPath}.3`).text()).toBe("prev2");
+	});
+
+	test("deletes oldest log file when at max", async () => {
+		const logPath = join(ctx.configDir, "test.log");
+		const { mkdir } = await import("node:fs/promises");
+		await mkdir(ctx.configDir, { recursive: true });
+		await Bun.write(logPath, "current");
+		await Bun.write(`${logPath}.1`, "prev1");
+		await Bun.write(`${logPath}.2`, "prev2");
+		await Bun.write(`${logPath}.3`, "prev3");
+
+		await rotateLog(logPath);
+
+		expect(await Bun.file(`${logPath}.1`).text()).toBe("current");
+		expect(await Bun.file(`${logPath}.2`).text()).toBe("prev1");
+		expect(await Bun.file(`${logPath}.3`).text()).toBe("prev2");
+		// prev3 (was .3, the oldest) is deleted
+		expect(await Bun.file(`${logPath}.4`).exists()).toBe(false);
 	});
 });

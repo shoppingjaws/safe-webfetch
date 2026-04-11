@@ -6,7 +6,7 @@
 		"cc-permission": "src/cli.ts"
 	},
 	"scripts": {
-		"test": "docker build -f Dockerfile.test -t cc-permission-test . && docker run --rm cc-permission-test",
+		"test": "bun test",
 		"format": "biome format --write",
 		"format:check": "biome format",
 		"lint": "biome lint --fix",
