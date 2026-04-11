@@ -64,23 +64,19 @@ templates テンプレートと手動ルールを定義する。
 }
 ```
 
-### `permission.json5` — 自動学習ルール
+### `permission.json` — 自動学習ルール
 
 templates により自動生成・追加される。手動編集も可能。
 
-```json5
+```json
 {
-  rules: [
-    // 自動追加される例:
-    // { tool: "WebFetch", match: { field: "url", pattern: "https://github.com/xxx/**" }, action: "allow" },
-    // { tool: "WebFetch", match: { field: "url", pattern: "https://raw.githubusercontent.com/xxx/**" }, action: "allow" },
-  ],
+  "rules": []
 }
 ```
 
 ### ルール評価順序
 
-- `config.json5` の rules → `permission.json5` の rules の順に評価
+- `config.json5` の rules → `permission.json` の rules の順に評価
 - 上から順に評価し、最初にマッチしたルールを適用する
 - どのルールにもマッチしない場合は `{}` を返し、Claude Code のデフォルト挙動に委ねる
 
@@ -90,9 +86,9 @@ templates により自動生成・追加される。手動編集も可能。
 
 - `match`: プレースホルダー付きテンプレート。`{name}` は1つのパスセグメントをキャプチャ
 - `generate`: キャプチャした値を使って生成するglobパターンの配列
-- 生成されたルールは `permission.json5` に自動追加される（重複はスキップ）
+- 生成されたルールは `permission.json` に自動追加される（重複はスキップ）
 
-例: `https://github.com/xxx/yyy/zzz` への Fetch を許可すると、以下のルールが `permission.json5` に自動生成される:
+例: `https://github.com/xxx/yyy/zzz` への Fetch を許可すると、以下のルールが `permission.json` に自動生成される:
 - `https://github.com/xxx/**`
 - `https://raw.githubusercontent.com/xxx/**`
 

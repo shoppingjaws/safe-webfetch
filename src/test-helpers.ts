@@ -33,15 +33,15 @@ export function createTestContext(): TestContext {
 	function writePermission(permission: unknown) {
 		mkdirSync(configDir, { recursive: true });
 		writeFileSync(
-			join(configDir, "permission.json5"),
-			JSON5.stringify(permission, null, 2),
+			join(configDir, "permission.json"),
+			JSON.stringify(permission, null, 2),
 			"utf-8",
 		);
 	}
 
 	function readPermission() {
-		return JSON5.parse(
-			readFileSync(join(configDir, "permission.json5"), "utf-8"),
+		return JSON.parse(
+			readFileSync(join(configDir, "permission.json"), "utf-8"),
 		);
 	}
 

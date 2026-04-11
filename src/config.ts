@@ -29,7 +29,7 @@ export function getConfigPath(): string {
 }
 
 export function getPermissionPath(): string {
-	return join(getConfigDir(), "permission.json5");
+	return join(getConfigDir(), "permission.json");
 }
 
 export function loadConfig(): Config {
@@ -50,7 +50,7 @@ export function loadPermission(): Rule[] {
 		return [];
 	}
 	const content = readFileSync(path, "utf-8");
-	const parsed = JSON5.parse(content) as { rules?: Rule[] };
+	const parsed = JSON.parse(content) as { rules?: Rule[] };
 	return parsed.rules ?? [];
 }
 
@@ -65,7 +65,7 @@ export function addRule(rule: Rule): void {
 	mkdirSync(dir, { recursive: true });
 	writeFileSync(
 		getPermissionPath(),
-		JSON5.stringify({ rules }, null, 2),
+		JSON.stringify({ rules }, null, 2),
 		"utf-8",
 	);
 }
