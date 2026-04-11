@@ -22,8 +22,8 @@ interface ClaudeSettings {
 	[key: string]: unknown;
 }
 
-const PRE_HOOK_COMMAND = "cc-permission hook";
-const POST_HOOK_COMMAND = "cc-permission post-hook";
+const PRE_HOOK_COMMAND = "safe-fetch hook";
+const POST_HOOK_COMMAND = "safe-fetch post-hook";
 
 function getClaudeSettingsPath(): string {
 	return join(homedir(), ".claude", "settings.json");

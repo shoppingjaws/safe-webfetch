@@ -1,10 +1,10 @@
 {
-	"name": "cc-permission",
+	"name": "safe-fetch",
 	"version": "0.1.0",
 	"description": "Claude Code permission prompt controller - auto allow/deny via pattern matching hooks",
 	"type": "module",
 	"bin": {
-		"cc-permission": "./dist/cli.js"
+		"safe-fetch": "./dist/cli.js"
 	},
 	"scripts": {
 		"test": "bun test",

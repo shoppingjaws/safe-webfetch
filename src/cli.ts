@@ -24,12 +24,12 @@ switch (command) {
 			const { runLogShow } = await import("./log-show.ts");
 			await runLogShow();
 		} else {
-			console.error("Usage: cc-permission log <show>");
+			console.error("Usage: safe-fetch log <show>");
 			process.exit(1);
 		}
 		break;
 	}
 	default:
-		console.error("Usage: cc-permission <hook|post-hook|init|log>");
+		console.error("Usage: safe-fetch <hook|post-hook|init|log>");
 		process.exit(1);
 }

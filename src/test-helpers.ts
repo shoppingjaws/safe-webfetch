@@ -18,8 +18,8 @@ export interface TestContext {
 }
 
 export function createTestContext(): TestContext {
-	const tmpDir = mkdtempSync(join(tmpdir(), "cc-permission-test-"));
-	const configDir = join(tmpDir, "cc-permission");
+	const tmpDir = mkdtempSync(join(tmpdir(), "safe-fetch-test-"));
+	const configDir = join(tmpDir, "safe-fetch");
 
 	function writeConfig(config: unknown) {
 		mkdirSync(configDir, { recursive: true });

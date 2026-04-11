@@ -20,7 +20,7 @@ export async function runHook(): Promise<void> {
 	await log("hook:result", result);
 	if (result.decision === "allow") {
 		process.stderr.write(
-			`[cc-permission] auto-allowed: ${input.tool_name} (${result.matchedPattern})\n`,
+			`[safe-fetch] auto-allowed: ${input.tool_name} (${result.matchedPattern})\n`,
 		);
 	}
 	const { matchedPattern: _, ...output } = result;
@@ -38,7 +38,7 @@ export async function runPostHook(): Promise<void> {
 	for (const rule of newRules) {
 		addPermissionPattern(rule.pattern);
 		await log("post-hook:rule-added", rule);
-		messages.push(`[cc-permission] rule added: ${rule.pattern}`);
+		messages.push(`[safe-fetch] rule added: ${rule.pattern}`);
 	}
 	const output: Record<string, string> = {};
 	if (messages.length > 0) {
