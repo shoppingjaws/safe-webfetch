@@ -6,29 +6,5 @@
 			"Bash(bun test:*)"
 		],
 		"ask": ["Edit(package.json)", "Edit(mise.toml)", "Edit(Dockerfile.test)"]
-	},
-	"hooks": {
-		"PreToolUse": [
-			{
-				"matcher": "WebFetch",
-				"hooks": [
-					{
-						"type": "command",
-						"command": "cc-permission hook"
-					}
-				]
-			}
-		],
-		"PostToolUse": [
-			{
-				"matcher": "WebFetch",
-				"hooks": [
-					{
-						"type": "command",
-						"command": "cc-permission post-hook"
-					}
-				]
-			}
-		]
 	}
 }
