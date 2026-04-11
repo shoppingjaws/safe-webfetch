@@ -16,7 +16,10 @@ describe("hook (PreToolUse)", () => {
 			rules: [
 				{
 					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/shoppingjaws/**" },
+					match: {
+						field: "url",
+						pattern: "https://github.com/shoppingjaws/**",
+					},
 					action: "allow",
 				},
 			],
@@ -24,7 +27,9 @@ describe("hook (PreToolUse)", () => {
 
 		const { stdout } = await ctx.runHook({
 			tool_name: "WebFetch",
-			tool_input: { url: "https://github.com/shoppingjaws/cc-permission/README.md" },
+			tool_input: {
+				url: "https://github.com/shoppingjaws/cc-permission/README.md",
+			},
 		});
 
 		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
@@ -57,7 +62,10 @@ describe("hook (PreToolUse)", () => {
 			rules: [
 				{
 					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/shoppingjaws/**" },
+					match: {
+						field: "url",
+						pattern: "https://github.com/shoppingjaws/**",
+					},
 					action: "allow",
 				},
 			],
@@ -118,7 +126,10 @@ describe("hook (PreToolUse)", () => {
 			tool_input: { url: "https://github.com/xxx/yyy" },
 		});
 
-		expect(JSON.parse(stdout)).toEqual({ decision: "deny", reason: "config wins" });
+		expect(JSON.parse(stdout)).toEqual({
+			decision: "deny",
+			reason: "config wins",
+		});
 	});
 
 	test("returns empty when no config exists", async () => {
@@ -162,7 +173,10 @@ describe("post-hook (PostToolUse)", () => {
 			},
 			{
 				tool: "WebFetch",
-				match: { field: "url", pattern: "https://raw.githubusercontent.com/xxx/**" },
+				match: {
+					field: "url",
+					pattern: "https://raw.githubusercontent.com/xxx/**",
+				},
 				action: "allow",
 			},
 		]);

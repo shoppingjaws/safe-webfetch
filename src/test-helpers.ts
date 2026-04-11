@@ -12,7 +12,9 @@ export interface TestContext {
 	writePermission: (permission: unknown) => void;
 	readPermission: () => { rules: unknown[] };
 	runHook: (input: unknown) => Promise<{ stdout: string; exitCode: number }>;
-	runPostHook: (input: unknown) => Promise<{ stdout: string; exitCode: number }>;
+	runPostHook: (
+		input: unknown,
+	) => Promise<{ stdout: string; exitCode: number }>;
 }
 
 export function createTestContext(): TestContext {
