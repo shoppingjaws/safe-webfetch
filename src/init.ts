@@ -3,10 +3,20 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 import { initConfig } from "./config.ts";
 
+interface HookEntry {
+	type: "command";
+	command: string;
+}
+
+interface HookGroup {
+	matcher: string;
+	hooks: HookEntry[];
+}
+
 interface ClaudeSettings {
 	hooks?: {
-		PreToolUse?: Array<{ matcher: string; command: string }>;
-		PostToolUse?: Array<{ matcher: string; command: string }>;
+		PreToolUse?: HookGroup[];
+		PostToolUse?: HookGroup[];
 	};
 	[key: string]: unknown;
 }
@@ -39,23 +49,25 @@ function registerHooks(): {
 		settings.hooks.PostToolUse = [];
 	}
 
-	const preRegistered = !settings.hooks.PreToolUse.some(
-		(h) => h.command === PRE_HOOK_COMMAND,
+	const hasPreHook = settings.hooks.PreToolUse.some((g) =>
+		g.hooks.some((h) => h.command === PRE_HOOK_COMMAND),
 	);
+	const preRegistered = !hasPreHook;
 	if (preRegistered) {
 		settings.hooks.PreToolUse.push({
 			matcher: "",
-			command: PRE_HOOK_COMMAND,
+			hooks: [{ type: "command", command: PRE_HOOK_COMMAND }],
 		});
 	}
 
-	const postRegistered = !settings.hooks.PostToolUse.some(
-		(h) => h.command === POST_HOOK_COMMAND,
+	const hasPostHook = settings.hooks.PostToolUse.some((g) =>
+		g.hooks.some((h) => h.command === POST_HOOK_COMMAND),
 	);
+	const postRegistered = !hasPostHook;
 	if (postRegistered) {
 		settings.hooks.PostToolUse.push({
 			matcher: "",
-			command: POST_HOOK_COMMAND,
+			hooks: [{ type: "command", command: POST_HOOK_COMMAND }],
 		});
 	}
 
