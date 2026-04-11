@@ -30,13 +30,13 @@ cd cc-permission
 # 依存関係のインストール
 bun install
 
-# ビルド（任意: コンパイル済みバイナリを生成）
-bun run build   # → dist/cc-permission
+# バンドル（任意）
+bun run build   # → dist/cli.js
 
 # PATH の通った場所にリンクまたはコピー
 bun link
 # または
-cp dist/cc-permission ~/.local/bin/
+cp dist/cli.js ~/.local/bin/cc-permission
 ```
 
 ## セットアップ

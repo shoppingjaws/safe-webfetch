@@ -14,7 +14,7 @@ bun run typecheck         # tsc --noEmit
 bun run lint:check        # biome lint
 bun run format:check      # biome format check
 bun run format            # biome format --write
-bun run build             # compile to dist/cc-permission
+bun run build             # bundle to dist/cli.js
 ```
 
 `bun run test` でローカル実行

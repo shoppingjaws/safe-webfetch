@@ -29,13 +29,13 @@ git clone https://github.com/shoppingjaws/cc-permission.git
 cd cc-permission
 bun install
 
-# Build a standalone binary (optional)
-bun run build   # → dist/cc-permission
+# Bundle (optional)
+bun run build   # → dist/cli.js
 
 # Make it available on PATH
 bun link
 # or
-cp dist/cc-permission ~/.local/bin/
+cp dist/cli.js ~/.local/bin/cc-permission
 ```
 
 ## Setup
