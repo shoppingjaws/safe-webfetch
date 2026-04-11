@@ -8,6 +8,8 @@ export interface HookInput {
 export interface HookOutput {
 	decision?: "allow" | "deny";
 	reason?: string;
+	/** マッチしたルールのパターン（ログ用、JSON出力には含めない） */
+	matchedPattern?: string;
 }
 
 function globToRegex(pattern: string): RegExp {
@@ -46,7 +48,10 @@ export function matchRule(input: HookInput, rules: Rule[]): HookOutput {
 		}
 		const regex = globToRegex(rule.match.pattern);
 		if (regex.test(value)) {
-			const result: HookOutput = { decision: rule.action };
+			const result: HookOutput = {
+				decision: rule.action,
+				matchedPattern: rule.match.pattern,
+			};
 			if (rule.action === "deny" && rule.reason) {
 				result.reason = rule.reason;
 			}

@@ -18,7 +18,13 @@ export async function runHook(): Promise<void> {
 	const allRules = loadAllRules();
 	const result = matchRule(input, allRules);
 	log("hook:result", result);
-	process.stdout.write(JSON.stringify(result));
+	if (result.decision === "allow") {
+		process.stderr.write(
+			`[cc-permission] auto-allowed: ${input.tool_name} (${result.matchedPattern})\n`,
+		);
+	}
+	const { matchedPattern: _, ...output } = result;
+	process.stdout.write(JSON.stringify(output));
 }
 
 export async function runPostHook(): Promise<void> {
@@ -31,6 +37,9 @@ export async function runPostHook(): Promise<void> {
 	for (const rule of newRules) {
 		addRule(rule);
 		log("post-hook:rule-added", rule);
+		process.stderr.write(
+			`[cc-permission] rule added: ${rule.tool} ${rule.match.field}=${rule.match.pattern} (${rule.action})\n`,
+		);
 	}
 	process.stdout.write("{}");
 }
