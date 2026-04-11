@@ -102,6 +102,32 @@ const defaultConfig = `{
         "https://registry.npmjs.org/{pkg}/**",
       ],
     },
+    // npm: スコープ付きパッケージ (@org/pkg)
+    {
+      match: "https://www.npmjs.com/package/@{scope}/{pkg}/**",
+      generate: [
+        "https://www.npmjs.com/package/@{scope}/{pkg}/**",
+        "https://registry.npmjs.org/@{scope}/{pkg}/**",
+      ],
+    },
+    // PyPI: パッケージ単位で許可
+    {
+      match: "https://pypi.org/project/{pkg}/**",
+      generate: ["https://pypi.org/project/{pkg}/**"],
+    },
+    // crates.io: クレート単位で許可 + docs.rs も自動追加
+    {
+      match: "https://crates.io/crates/{crate}/**",
+      generate: [
+        "https://crates.io/crates/{crate}/**",
+        "https://docs.rs/{crate}/**",
+      ],
+    },
+    // pkg.go.dev: モジュール単位で許可
+    {
+      match: "https://pkg.go.dev/{module}/**",
+      generate: ["https://pkg.go.dev/{module}/**"],
+    },
   ],
 }
 `;
