@@ -1,11 +1,14 @@
 {
 	"name": "safe-webfetch",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Claude Code permission prompt controller - auto allow/deny via pattern matching hooks",
 	"type": "module",
 	"bin": {
 		"safe-webfetch": "./dist/cli.js"
 	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"test": "bun test",
 		"format": "biome format --write",
@@ -13,7 +16,8 @@
 		"lint": "biome lint --fix",
 		"lint:check": "biome lint",
 		"typecheck": "tsc --noEmit",
-		"build": "bun build ./src/cli.ts --outdir ./dist --target bun"
+		"build": "bun build ./src/cli.ts --outdir ./dist --target node",
+		"prepublishOnly": "bun run build"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"
@@ -23,5 +27,8 @@
 	},
 	"dependencies": {
 		"json5": "^2.2.3"
+	},
+	"engines": {
+		"node": ">=22"
 	}
 }
