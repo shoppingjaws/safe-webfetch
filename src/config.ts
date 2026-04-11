@@ -20,7 +20,7 @@ export interface Config {
 export function getConfigDir(): string {
 	const xdg = process.env.XDG_CONFIG_HOME;
 	const base = xdg || join(homedir(), ".config");
-	return join(base, "safe-fetch");
+	return join(base, "safe-webfetch");
 }
 
 export function getConfigPath(): string {

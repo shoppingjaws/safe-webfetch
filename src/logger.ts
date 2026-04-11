@@ -6,7 +6,7 @@ const MAX_LOG_SIZE = 1 * 1024 * 1024; // 1MB
 const MAX_LOG_FILES = 3;
 
 export function getLogPath(): string {
-	return join(getConfigDir(), "safe-fetch.log");
+	return join(getConfigDir(), "safe-webfetch.log");
 }
 
 function formatTimestamp(): string {

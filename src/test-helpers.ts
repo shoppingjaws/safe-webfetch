@@ -18,8 +18,8 @@ export interface TestContext {
 }
 
 export function createTestContext(): TestContext {
-	const tmpDir = mkdtempSync(join(tmpdir(), "safe-fetch-test-"));
-	const configDir = join(tmpDir, "safe-fetch");
+	const tmpDir = mkdtempSync(join(tmpdir(), "safe-webfetch-test-"));
+	const configDir = join(tmpDir, "safe-webfetch");
 
 	function writeConfig(config: unknown) {
 		mkdirSync(configDir, { recursive: true });

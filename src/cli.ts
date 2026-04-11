@@ -24,12 +24,12 @@ switch (command) {
 			const { runLogShow } = await import("./log-show.ts");
 			await runLogShow();
 		} else {
-			console.error("Usage: safe-fetch log <show>");
+			console.error("Usage: safe-webfetch log <show>");
 			process.exit(1);
 		}
 		break;
 	}
 	default:
-		console.error("Usage: safe-fetch <hook|post-hook|init|log>");
+		console.error("Usage: safe-webfetch <hook|post-hook|init|log>");
 		process.exit(1);
 }

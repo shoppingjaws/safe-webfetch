@@ -1,4 +1,4 @@
-# safe-fetch
+# safe-webfetch
 
 Rule-based auto-control for Claude Code permission prompts via pattern matching.
 
@@ -8,7 +8,7 @@ Rule-based auto-control for Claude Code permission prompts via pattern matching.
 
 Claude Code shows a permission prompt every time it accesses an external resource (URLs, etc.). Manually approving the same domains over and over interrupts your flow.
 
-safe-fetch uses Claude Code's [Hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) to **automatically allow or deny based on predefined rules**, eliminating repetitive prompts.
+safe-webfetch uses Claude Code's [Hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) to **automatically allow or deny based on predefined rules**, eliminating repetitive prompts.
 
 It also features **template learning** — once you approve a URL, the tool extracts the domain or package name and auto-generates rules so future requests to the same pattern are allowed automatically.
 
@@ -25,33 +25,33 @@ PostToolUse hook  → template learning → append new rules to permission.json
 ## Installation
 
 ```bash
-git clone https://github.com/shoppingjaws/safe-fetch.git
-cd safe-fetch
+git clone https://github.com/shoppingjaws/safe-webfetch.git
+cd safe-webfetch
 bun install
 
 # Build a standalone binary (optional)
-bun run build   # → dist/safe-fetch
+bun run build   # → dist/safe-webfetch
 
 # Make it available on PATH
 bun link
 # or
-cp dist/safe-fetch ~/.local/bin/
+cp dist/safe-webfetch ~/.local/bin/
 ```
 
 ## Setup
 
 ```bash
-safe-fetch init
+safe-webfetch init
 ```
 
 This will:
 
-1. Create `$XDG_CONFIG_HOME/safe-fetch/config.json5` with default templates
+1. Create `$XDG_CONFIG_HOME/safe-webfetch/config.json5` with default templates
 2. Register PreToolUse / PostToolUse hooks in `~/.claude/settings.json`
 
 ## Configuration
 
-Config files live in `$XDG_CONFIG_HOME/safe-fetch/` (defaults to `~/.config/safe-fetch/`).
+Config files live in `$XDG_CONFIG_HOME/safe-webfetch/` (defaults to `~/.config/safe-webfetch/`).
 
 ### config.json5 — Manual rules and templates
 
@@ -109,7 +109,7 @@ If a rule matches, the request is allowed. If no rule matches, Claude Code shows
 
 ## Default templates
 
-`safe-fetch init` generates templates for:
+`safe-webfetch init` generates templates for:
 
 - **GitHub** — `github.com/{org}/**` + `raw.githubusercontent.com/{org}/**`
 - **docs.\* sites** — `docs.{domain}/**` (AWS, Datadog, GCP, etc.)
@@ -123,10 +123,10 @@ If a rule matches, the request is allowed. If no rule matches, Claude Code shows
 
 | Command | Description |
 |---------|-------------|
-| `safe-fetch init` | Create config + register hooks |
-| `safe-fetch hook` | PreToolUse hook (reads tool input from stdin) |
-| `safe-fetch post-hook` | PostToolUse hook (template learning) |
-| `safe-fetch log show [-n N]` | Show recent log entries |
+| `safe-webfetch init` | Create config + register hooks |
+| `safe-webfetch hook` | PreToolUse hook (reads tool input from stdin) |
+| `safe-webfetch post-hook` | PostToolUse hook (template learning) |
+| `safe-webfetch log show [-n N]` | Show recent log entries |
 
 ## Development
 
