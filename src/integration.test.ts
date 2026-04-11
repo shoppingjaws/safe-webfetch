@@ -15,11 +15,7 @@ describe("hook (PreToolUse)", () => {
 		ctx.writePermission({
 			rules: [
 				{
-					tool: "WebFetch",
-					match: {
-						field: "url",
-						pattern: "https://github.com/shoppingjaws/**",
-					},
+					pattern: "https://github.com/shoppingjaws/**",
 					action: "allow",
 				},
 			],
@@ -40,8 +36,7 @@ describe("hook (PreToolUse)", () => {
 		ctx.writePermission({
 			rules: [
 				{
-					tool: "WebFetch",
-					match: { field: "url", pattern: "https://evil.example.com/**" },
+					pattern: "https://evil.example.com/**",
 					action: "deny",
 					reason: "blocked",
 				},
@@ -61,11 +56,7 @@ describe("hook (PreToolUse)", () => {
 		ctx.writePermission({
 			rules: [
 				{
-					tool: "WebFetch",
-					match: {
-						field: "url",
-						pattern: "https://github.com/shoppingjaws/**",
-					},
+					pattern: "https://github.com/shoppingjaws/**",
 					action: "allow",
 				},
 			],
@@ -84,11 +75,7 @@ describe("hook (PreToolUse)", () => {
 		ctx.writePermission({
 			rules: [
 				{
-					tool: "WebFetch",
-					match: {
-						field: "url",
-						pattern: "https://github.com/shoppingjaws/**",
-					},
+					pattern: "https://github.com/shoppingjaws/**",
 					action: "allow",
 				},
 			],
@@ -107,11 +94,7 @@ describe("hook (PreToolUse)", () => {
 		ctx.writePermission({
 			rules: [
 				{
-					tool: "WebFetch",
-					match: {
-						field: "url",
-						pattern: "https://github.com/shoppingjaws/**",
-					},
+					pattern: "https://github.com/shoppingjaws/**",
 					action: "allow",
 				},
 			],
@@ -140,8 +123,6 @@ describe("post-hook (PostToolUse)", () => {
 		ctx.writeConfig({
 			templates: [
 				{
-					tool: "WebFetch",
-					field: "url",
 					match: "https://github.com/{org}/**",
 					generate: [
 						"https://github.com/{org}/**",
@@ -159,16 +140,11 @@ describe("post-hook (PostToolUse)", () => {
 		const permission = ctx.readPermission();
 		expect(permission.rules).toEqual([
 			{
-				tool: "WebFetch",
-				match: { field: "url", pattern: "https://github.com/xxx/**" },
+				pattern: "https://github.com/xxx/**",
 				action: "allow",
 			},
 			{
-				tool: "WebFetch",
-				match: {
-					field: "url",
-					pattern: "https://raw.githubusercontent.com/xxx/**",
-				},
+				pattern: "https://raw.githubusercontent.com/xxx/**",
 				action: "allow",
 			},
 		]);
@@ -178,8 +154,6 @@ describe("post-hook (PostToolUse)", () => {
 		ctx.writeConfig({
 			templates: [
 				{
-					tool: "WebFetch",
-					field: "url",
 					match: "https://github.com/{org}/**",
 					generate: ["https://github.com/{org}/**"],
 				},
@@ -188,8 +162,7 @@ describe("post-hook (PostToolUse)", () => {
 		ctx.writePermission({
 			rules: [
 				{
-					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/xxx/**" },
+					pattern: "https://github.com/xxx/**",
 					action: "allow",
 				},
 			],
@@ -208,8 +181,6 @@ describe("post-hook (PostToolUse)", () => {
 		ctx.writeConfig({
 			templates: [
 				{
-					tool: "WebFetch",
-					field: "url",
 					match: "https://github.com/{org}/**",
 					generate: [
 						"https://github.com/{org}/**",
@@ -227,16 +198,11 @@ describe("post-hook (PostToolUse)", () => {
 		const permission = ctx.readPermission();
 		expect(permission.rules).toEqual([
 			{
-				tool: "WebFetch",
-				match: { field: "url", pattern: "https://github.com/anthropics/**" },
+				pattern: "https://github.com/anthropics/**",
 				action: "allow",
 			},
 			{
-				tool: "WebFetch",
-				match: {
-					field: "url",
-					pattern: "https://raw.githubusercontent.com/anthropics/**",
-				},
+				pattern: "https://raw.githubusercontent.com/anthropics/**",
 				action: "allow",
 			},
 		]);
@@ -246,8 +212,6 @@ describe("post-hook (PostToolUse)", () => {
 		ctx.writeConfig({
 			templates: [
 				{
-					tool: "WebFetch",
-					field: "url",
 					match: "https://github.com/{org}/**",
 					generate: ["https://github.com/{org}/**"],
 				},
@@ -267,8 +231,6 @@ describe("post-hook (PostToolUse)", () => {
 		ctx.writeConfig({
 			templates: [
 				{
-					tool: "WebFetch",
-					field: "url",
 					match: "https://github.com/{org}/**",
 					generate: ["https://github.com/{org}/**"],
 				},

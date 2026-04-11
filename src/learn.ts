@@ -66,15 +66,10 @@ export function fillTemplate(
 }
 
 /**
- * Check if a rule already exists in the rules list (same tool, field, and pattern).
+ * Check if a rule already exists in the rules list (same pattern).
  */
 function ruleExists(rule: Rule, existingRules: Rule[]): boolean {
-	return existingRules.some(
-		(r) =>
-			r.tool === rule.tool &&
-			r.match.field === rule.match.field &&
-			r.match.pattern === rule.match.pattern,
-	);
+	return existingRules.some((r) => r.pattern === rule.pattern);
 }
 
 /**
@@ -89,24 +84,23 @@ export function learnRules(
 	const newRules: Rule[] = [];
 
 	for (const learn of templates) {
-		if (learn.tool !== input.tool_name) continue;
+		for (const value of Object.values(input.tool_input)) {
+			if (typeof value !== "string") continue;
 
-		const value = input.tool_input[learn.field];
-		if (typeof value !== "string") continue;
+			const placeholders = extractPlaceholders(value, learn.match);
+			if (!placeholders) continue;
 
-		const placeholders = extractPlaceholders(value, learn.match);
-		if (!placeholders) continue;
-
-		for (const generatePattern of learn.generate) {
-			const pattern = fillTemplate(generatePattern, placeholders);
-			const rule: Rule = {
-				tool: learn.tool,
-				match: { field: learn.field, pattern },
-				action: "allow",
-			};
-			if (!ruleExists(rule, existingRules) && !ruleExists(rule, newRules)) {
-				newRules.push(rule);
+			for (const generatePattern of learn.generate) {
+				const pattern = fillTemplate(generatePattern, placeholders);
+				const rule: Rule = {
+					pattern,
+					action: "allow",
+				};
+				if (!ruleExists(rule, existingRules) && !ruleExists(rule, newRules)) {
+					newRules.push(rule);
+				}
 			}
+			break;
 		}
 	}
 

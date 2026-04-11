@@ -38,7 +38,7 @@ export async function runPostHook(): Promise<void> {
 		addRule(rule);
 		await log("post-hook:rule-added", rule);
 		process.stderr.write(
-			`[cc-permission] rule added: ${rule.tool} ${rule.match.field}=${rule.match.pattern} (${rule.action})\n`,
+			`[cc-permission] rule added: ${rule.pattern} (${rule.action})\n`,
 		);
 	}
 	process.stdout.write("{}");

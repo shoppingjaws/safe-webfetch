@@ -4,18 +4,12 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 export interface Rule {
-	tool: string;
-	match: {
-		field: string;
-		pattern: string;
-	};
+	pattern: string;
 	action: "allow" | "deny";
 	reason?: string;
 }
 
 export interface Template {
-	tool: string;
-	field: string;
 	match: string;
 	generate: string[];
 }
@@ -80,8 +74,6 @@ const defaultConfig = `{
   templates: [
     // Example:
     // {
-    //   tool: "WebFetch",
-    //   field: "url",
     //   match: "https://github.com/{org}/**",
     //   generate: [
     //     "https://github.com/{org}/**",

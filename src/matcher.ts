@@ -39,23 +39,19 @@ function globToRegex(pattern: string): RegExp {
 
 export function matchRule(input: HookInput, rules: Rule[]): HookOutput {
 	for (const rule of rules) {
-		if (rule.tool !== input.tool_name) {
-			continue;
-		}
-		const value = input.tool_input[rule.match.field];
-		if (typeof value !== "string") {
-			continue;
-		}
-		const regex = globToRegex(rule.match.pattern);
-		if (regex.test(value)) {
-			const result: HookOutput = {
-				decision: rule.action,
-				matchedPattern: rule.match.pattern,
-			};
-			if (rule.action === "deny" && rule.reason) {
-				result.reason = rule.reason;
+		const regex = globToRegex(rule.pattern);
+		for (const value of Object.values(input.tool_input)) {
+			if (typeof value !== "string") continue;
+			if (regex.test(value)) {
+				const result: HookOutput = {
+					decision: rule.action,
+					matchedPattern: rule.pattern,
+				};
+				if (rule.action === "deny" && rule.reason) {
+					result.reason = rule.reason;
+				}
+				return result;
 			}
-			return result;
 		}
 	}
 	return {};
