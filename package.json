@@ -1,0 +1,20 @@
+{
+	"name": "template-bun",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+  "scripts": {
+    "test": "docker build -f Dockerfile.test -t template-bun-test . && docker run --rm template-bun-test",
+    "format": "biome format --write",
+		"format:check": "biome format",
+		"lint": "biome lint --fix",
+		"lint:check": "biome lint",
+		"typecheck": "tsc --noEmit"
+  },
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}

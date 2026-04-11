@@ -1,0 +1,8 @@
+FROM jdxcode/mise:latest
+WORKDIR /app
+COPY mise.toml ./
+RUN mise trust && mise install
+COPY package.json bun.lock* ./
+RUN bun install
+COPY . .
+CMD ["mise", "exec", "--", "bun", "test"]
