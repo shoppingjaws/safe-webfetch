@@ -18,11 +18,11 @@ function globToRegex(pattern: string): RegExp {
 	while (i < pattern.length) {
 		const char = pattern[i]!;
 		if (char === "*" && pattern[i + 1] === "*") {
-			regex += ".*";
 			i += 2;
-			if (pattern[i] === "/") {
-				i++; // skip trailing slash after **
-			}
+			if (regex.endsWith("/")) regex = regex.slice(0, -1);
+			if (pattern[i] === "/") i++;
+			regex += "(/.*)?";
+
 		} else if (char === "*") {
 			regex += "[^/]*";
 			i++;

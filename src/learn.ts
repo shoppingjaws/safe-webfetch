@@ -22,9 +22,11 @@ function matchTemplateToRegex(template: string): RegExp {
 			regex += `(?<${name}>[^/]+)`;
 			i = end + 1;
 		} else if (template[i] === "*" && template[i + 1] === "*") {
-			regex += ".*";
 			i += 2;
+			if (regex.endsWith("/")) regex = regex.slice(0, -1);
 			if (template[i] === "/") i++;
+			regex += "(/.*)?";
+
 		} else if (template[i] === "*") {
 			regex += "[^/]*";
 			i++;

@@ -132,6 +132,52 @@ describe("hook (PreToolUse)", () => {
 		});
 	});
 
+	test("allows base path without trailing slash for /** pattern", async () => {
+		ctx.writeConfig({
+			templates: [],
+			rules: [
+				{
+					tool: "WebFetch",
+					match: {
+						field: "url",
+						pattern: "https://github.com/shoppingjaws/**",
+					},
+					action: "allow",
+				},
+			],
+		});
+
+		const { stdout } = await ctx.runHook({
+			tool_name: "WebFetch",
+			tool_input: { url: "https://github.com/shoppingjaws" },
+		});
+
+		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
+	});
+
+	test("allows base path with trailing slash for /** pattern", async () => {
+		ctx.writeConfig({
+			templates: [],
+			rules: [
+				{
+					tool: "WebFetch",
+					match: {
+						field: "url",
+						pattern: "https://github.com/shoppingjaws/**",
+					},
+					action: "allow",
+				},
+			],
+		});
+
+		const { stdout } = await ctx.runHook({
+			tool_name: "WebFetch",
+			tool_input: { url: "https://github.com/shoppingjaws/" },
+		});
+
+		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
+	});
+
 	test("returns empty when no config exists", async () => {
 		const { stdout } = await ctx.runHook({
 			tool_name: "WebFetch",
@@ -211,6 +257,45 @@ describe("post-hook (PostToolUse)", () => {
 
 		const permission = ctx.readPermission();
 		expect(permission.rules).toHaveLength(1);
+	});
+
+	test("generates rules from template when URL matches base path without subpath", async () => {
+		ctx.writeConfig({
+			templates: [
+				{
+					tool: "WebFetch",
+					field: "url",
+					match: "https://github.com/{org}/**",
+					generate: [
+						"https://github.com/{org}/**",
+						"https://raw.githubusercontent.com/{org}/**",
+					],
+				},
+			],
+			rules: [],
+		});
+
+		await ctx.runPostHook({
+			tool_name: "WebFetch",
+			tool_input: { url: "https://github.com/anthropics" },
+		});
+
+		const permission = ctx.readPermission();
+		expect(permission.rules).toEqual([
+			{
+				tool: "WebFetch",
+				match: { field: "url", pattern: "https://github.com/anthropics/**" },
+				action: "allow",
+			},
+			{
+				tool: "WebFetch",
+				match: {
+					field: "url",
+					pattern: "https://raw.githubusercontent.com/anthropics/**",
+				},
+				action: "allow",
+			},
+		]);
 	});
 
 	test("does not generate rules for non-matching template", async () => {
