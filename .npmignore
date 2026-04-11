@@ -1,0 +1,11 @@
+src/
+.claude/
+.github/
+.git/
+Dockerfile.test
+biome.json
+bun.lock
+mise.toml
+tsconfig.json
+CLAUDE.md
+SPEC.md

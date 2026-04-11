@@ -1,9 +1,10 @@
 {
 	"name": "cc-permission",
-	"module": "src/cli.ts",
+	"version": "0.1.0",
+	"description": "Claude Code permission prompt controller - auto allow/deny via pattern matching hooks",
 	"type": "module",
 	"bin": {
-		"cc-permission": "src/cli.ts"
+		"cc-permission": "./dist/cli.js"
 	},
 	"scripts": {
 		"test": "bun test",
@@ -12,7 +13,7 @@
 		"lint": "biome lint --fix",
 		"lint:check": "biome lint",
 		"typecheck": "tsc --noEmit",
-		"build": "bun build src/cli.ts --compile --outfile dist/cc-permission"
+		"build": "bun build ./src/cli.ts --outdir ./dist --target bun"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"
