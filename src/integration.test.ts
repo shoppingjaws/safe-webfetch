@@ -10,9 +10,9 @@ beforeEach(() => {
 });
 
 describe("hook (PreToolUse)", () => {
-	test("allows matching URL", async () => {
-		ctx.writeConfig({
-			templates: [],
+	test("allows matching permission rule", async () => {
+		ctx.writeConfig({ templates: [] });
+		ctx.writePermission({
 			rules: [
 				{
 					tool: "WebFetch",
@@ -35,9 +35,9 @@ describe("hook (PreToolUse)", () => {
 		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
 	});
 
-	test("denies matching URL with reason", async () => {
-		ctx.writeConfig({
-			templates: [],
+	test("denies matching permission rule with reason", async () => {
+		ctx.writeConfig({ templates: [] });
+		ctx.writePermission({
 			rules: [
 				{
 					tool: "WebFetch",
@@ -57,8 +57,8 @@ describe("hook (PreToolUse)", () => {
 	});
 
 	test("returns empty for non-matching URL", async () => {
-		ctx.writeConfig({
-			templates: [],
+		ctx.writeConfig({ templates: [] });
+		ctx.writePermission({
 			rules: [
 				{
 					tool: "WebFetch",
@@ -79,62 +79,9 @@ describe("hook (PreToolUse)", () => {
 		expect(JSON.parse(stdout)).toEqual({});
 	});
 
-	test("evaluates permission.json5 rules too", async () => {
-		ctx.writeConfig({ templates: [], rules: [] });
-		ctx.writePermission({
-			rules: [
-				{
-					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/xxx/**" },
-					action: "allow",
-				},
-			],
-		});
-
-		const { stdout } = await ctx.runHook({
-			tool_name: "WebFetch",
-			tool_input: { url: "https://github.com/xxx/yyy" },
-		});
-
-		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
-	});
-
-	test("config.json5 rules take priority over permission.json5", async () => {
-		ctx.writeConfig({
-			templates: [],
-			rules: [
-				{
-					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/xxx/**" },
-					action: "deny",
-					reason: "config wins",
-				},
-			],
-		});
-		ctx.writePermission({
-			rules: [
-				{
-					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/xxx/**" },
-					action: "allow",
-				},
-			],
-		});
-
-		const { stdout } = await ctx.runHook({
-			tool_name: "WebFetch",
-			tool_input: { url: "https://github.com/xxx/yyy" },
-		});
-
-		expect(JSON.parse(stdout)).toEqual({
-			decision: "deny",
-			reason: "config wins",
-		});
-	});
-
 	test("allows base path without trailing slash for /** pattern", async () => {
-		ctx.writeConfig({
-			templates: [],
+		ctx.writeConfig({ templates: [] });
+		ctx.writePermission({
 			rules: [
 				{
 					tool: "WebFetch",
@@ -156,8 +103,8 @@ describe("hook (PreToolUse)", () => {
 	});
 
 	test("allows base path with trailing slash for /** pattern", async () => {
-		ctx.writeConfig({
-			templates: [],
+		ctx.writeConfig({ templates: [] });
+		ctx.writePermission({
 			rules: [
 				{
 					tool: "WebFetch",
@@ -202,7 +149,6 @@ describe("post-hook (PostToolUse)", () => {
 					],
 				},
 			],
-			rules: [],
 		});
 
 		await ctx.runPostHook({
@@ -238,7 +184,6 @@ describe("post-hook (PostToolUse)", () => {
 					generate: ["https://github.com/{org}/**"],
 				},
 			],
-			rules: [],
 		});
 		ctx.writePermission({
 			rules: [
@@ -272,7 +217,6 @@ describe("post-hook (PostToolUse)", () => {
 					],
 				},
 			],
-			rules: [],
 		});
 
 		await ctx.runPostHook({
@@ -308,7 +252,6 @@ describe("post-hook (PostToolUse)", () => {
 					generate: ["https://github.com/{org}/**"],
 				},
 			],
-			rules: [],
 		});
 
 		const { stdout } = await ctx.runPostHook({
@@ -317,33 +260,6 @@ describe("post-hook (PostToolUse)", () => {
 		});
 
 		expect(JSON.parse(stdout)).toEqual({});
-		expect(() => ctx.readPermission()).toThrow();
-	});
-
-	test("does not generate rules when rule exists in config.json5", async () => {
-		ctx.writeConfig({
-			templates: [
-				{
-					tool: "WebFetch",
-					field: "url",
-					match: "https://github.com/{org}/**",
-					generate: ["https://github.com/{org}/**"],
-				},
-			],
-			rules: [
-				{
-					tool: "WebFetch",
-					match: { field: "url", pattern: "https://github.com/xxx/**" },
-					action: "allow",
-				},
-			],
-		});
-
-		await ctx.runPostHook({
-			tool_name: "WebFetch",
-			tool_input: { url: "https://github.com/xxx/yyy" },
-		});
-
 		expect(() => ctx.readPermission()).toThrow();
 	});
 
@@ -357,7 +273,6 @@ describe("post-hook (PostToolUse)", () => {
 					generate: ["https://github.com/{org}/**"],
 				},
 			],
-			rules: [],
 		});
 
 		const before = await ctx.runHook({

@@ -55,7 +55,7 @@ function registerHooks(): {
 	const preRegistered = !hasPreHook;
 	if (preRegistered) {
 		settings.hooks.PreToolUse.push({
-			matcher: "",
+			matcher: "WebFetch",
 			hooks: [{ type: "command", command: PRE_HOOK_COMMAND }],
 		});
 	}
@@ -66,7 +66,7 @@ function registerHooks(): {
 	const postRegistered = !hasPostHook;
 	if (postRegistered) {
 		settings.hooks.PostToolUse.push({
-			matcher: "",
+			matcher: "WebFetch",
 			hooks: [{ type: "command", command: POST_HOOK_COMMAND }],
 		});
 	}

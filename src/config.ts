@@ -21,7 +21,6 @@ export interface Template {
 }
 
 export interface Config {
-	rules: Rule[];
 	templates: Template[];
 }
 
@@ -42,12 +41,11 @@ export function getPermissionPath(): string {
 export function loadConfig(): Config {
 	const path = getConfigPath();
 	if (!existsSync(path)) {
-		return { rules: [], templates: [] };
+		return { templates: [] };
 	}
 	const content = readFileSync(path, "utf-8");
 	const parsed = JSON5.parse(content) as Partial<Config>;
 	return {
-		rules: parsed.rules ?? [],
 		templates: parsed.templates ?? [],
 	};
 }
@@ -63,9 +61,7 @@ export function loadPermission(): Rule[] {
 }
 
 export function loadAllRules(): Rule[] {
-	const config = loadConfig();
-	const permission = loadPermission();
-	return [...config.rules, ...permission];
+	return loadPermission();
 }
 
 export function addRule(rule: Rule): void {
@@ -81,15 +77,16 @@ export function addRule(rule: Rule): void {
 }
 
 const defaultConfig = `{
-  rules: [
+  templates: [
     // Example:
     // {
     //   tool: "WebFetch",
-    //   match: {
-    //     field: "url",
-    //     pattern: "https://github.com/yourname/**",
-    //   },
-    //   action: "allow",
+    //   field: "url",
+    //   match: "https://github.com/{org}/**",
+    //   generate: [
+    //     "https://github.com/{org}/**",
+    //     "https://raw.githubusercontent.com/{org}/**",
+    //   ],
     // },
   ],
 }
