@@ -5,8 +5,7 @@ import { homedir } from "node:os";
 
 export interface Rule {
 	pattern: string;
-	action: "allow" | "deny";
-	reason?: string;
+	action: "allow";
 }
 
 export interface Template {
