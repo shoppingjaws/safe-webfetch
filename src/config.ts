@@ -15,6 +15,7 @@ export interface Template {
 }
 
 export interface Config {
+	rules: Rule[];
 	templates: Template[];
 }
 
@@ -35,11 +36,12 @@ export function getPermissionPath(): string {
 export function loadConfig(): Config {
 	const path = getConfigPath();
 	if (!existsSync(path)) {
-		return { templates: [] };
+		return { rules: [], templates: [] };
 	}
 	const content = readFileSync(path, "utf-8");
 	const parsed = JSON5.parse(content) as Partial<Config>;
 	return {
+		rules: parsed.rules ?? [],
 		templates: parsed.templates ?? [],
 	};
 }
@@ -50,22 +52,29 @@ export function loadPermission(): Rule[] {
 		return [];
 	}
 	const content = readFileSync(path, "utf-8");
-	const parsed = JSON.parse(content) as { rules?: Rule[] };
-	return parsed.rules ?? [];
+	const parsed = JSON.parse(content) as { rules?: string[] };
+	return (parsed.rules ?? []).map((pattern) => ({ pattern, action: "allow" as const }));
 }
 
 export function loadAllRules(): Rule[] {
-	return loadPermission();
+	const config = loadConfig();
+	return [...config.rules, ...loadPermission()];
 }
 
-export function addRule(rule: Rule): void {
-	const rules = loadPermission();
-	rules.push(rule);
+export function addPermissionPattern(pattern: string): void {
+	const path = getPermissionPath();
+	let patterns: string[] = [];
+	if (existsSync(path)) {
+		const content = readFileSync(path, "utf-8");
+		const parsed = JSON.parse(content) as { rules?: string[] };
+		patterns = parsed.rules ?? [];
+	}
+	patterns.push(pattern);
 	const dir = getConfigDir();
 	mkdirSync(dir, { recursive: true });
 	writeFileSync(
 		getPermissionPath(),
-		JSON.stringify({ rules }, null, 2),
+		JSON.stringify({ rules: patterns }, null, 2),
 		"utf-8",
 	);
 }

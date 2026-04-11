@@ -1,4 +1,4 @@
-import { addRule, loadAllRules, loadConfig } from "./config.ts";
+import { addPermissionPattern, loadAllRules, loadConfig } from "./config.ts";
 import { matchRule, type HookInput } from "./matcher.ts";
 import { learnRules } from "./learn.ts";
 import { log } from "./logger.ts";
@@ -36,9 +36,9 @@ export async function runPostHook(): Promise<void> {
 	const newRules = learnRules(input, config.templates, allRules);
 	const messages: string[] = [];
 	for (const rule of newRules) {
-		addRule(rule);
+		addPermissionPattern(rule.pattern);
 		await log("post-hook:rule-added", rule);
-		messages.push(`[cc-permission] rule added: ${rule.pattern} (${rule.action})`);
+		messages.push(`[cc-permission] rule added: ${rule.pattern}`);
 	}
 	const output: Record<string, string> = {};
 	if (messages.length > 0) {

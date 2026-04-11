@@ -13,12 +13,7 @@ describe("hook (PreToolUse)", () => {
 	test("allows matching permission rule", async () => {
 		ctx.writeConfig({ templates: [] });
 		ctx.writePermission({
-			rules: [
-				{
-					pattern: "https://github.com/shoppingjaws/**",
-					action: "allow",
-				},
-			],
+			rules: ["https://github.com/shoppingjaws/**"],
 		});
 
 		const { stdout } = await ctx.runHook({
@@ -31,9 +26,8 @@ describe("hook (PreToolUse)", () => {
 		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
 	});
 
-	test("denies matching permission rule with reason", async () => {
-		ctx.writeConfig({ templates: [] });
-		ctx.writePermission({
+	test("denies matching config rule with reason", async () => {
+		ctx.writeConfig({
 			rules: [
 				{
 					pattern: "https://evil.example.com/**",
@@ -41,6 +35,7 @@ describe("hook (PreToolUse)", () => {
 					reason: "blocked",
 				},
 			],
+			templates: [],
 		});
 
 		const { stdout } = await ctx.runHook({
@@ -54,12 +49,7 @@ describe("hook (PreToolUse)", () => {
 	test("returns empty for non-matching URL", async () => {
 		ctx.writeConfig({ templates: [] });
 		ctx.writePermission({
-			rules: [
-				{
-					pattern: "https://github.com/shoppingjaws/**",
-					action: "allow",
-				},
-			],
+			rules: ["https://github.com/shoppingjaws/**"],
 		});
 
 		const { stdout } = await ctx.runHook({
@@ -73,12 +63,7 @@ describe("hook (PreToolUse)", () => {
 	test("allows base path without trailing slash for /** pattern", async () => {
 		ctx.writeConfig({ templates: [] });
 		ctx.writePermission({
-			rules: [
-				{
-					pattern: "https://github.com/shoppingjaws/**",
-					action: "allow",
-				},
-			],
+			rules: ["https://github.com/shoppingjaws/**"],
 		});
 
 		const { stdout } = await ctx.runHook({
@@ -92,12 +77,7 @@ describe("hook (PreToolUse)", () => {
 	test("allows base path with trailing slash for /** pattern", async () => {
 		ctx.writeConfig({ templates: [] });
 		ctx.writePermission({
-			rules: [
-				{
-					pattern: "https://github.com/shoppingjaws/**",
-					action: "allow",
-				},
-			],
+			rules: ["https://github.com/shoppingjaws/**"],
 		});
 
 		const { stdout } = await ctx.runHook({
@@ -139,14 +119,8 @@ describe("post-hook (PostToolUse)", () => {
 
 		const permission = ctx.readPermission();
 		expect(permission.rules).toEqual([
-			{
-				pattern: "https://github.com/xxx/**",
-				action: "allow",
-			},
-			{
-				pattern: "https://raw.githubusercontent.com/xxx/**",
-				action: "allow",
-			},
+			"https://github.com/xxx/**",
+			"https://raw.githubusercontent.com/xxx/**",
 		]);
 	});
 
@@ -160,12 +134,7 @@ describe("post-hook (PostToolUse)", () => {
 			],
 		});
 		ctx.writePermission({
-			rules: [
-				{
-					pattern: "https://github.com/xxx/**",
-					action: "allow",
-				},
-			],
+			rules: ["https://github.com/xxx/**"],
 		});
 
 		await ctx.runPostHook({
@@ -197,14 +166,8 @@ describe("post-hook (PostToolUse)", () => {
 
 		const permission = ctx.readPermission();
 		expect(permission.rules).toEqual([
-			{
-				pattern: "https://github.com/anthropics/**",
-				action: "allow",
-			},
-			{
-				pattern: "https://raw.githubusercontent.com/anthropics/**",
-				action: "allow",
-			},
+			"https://github.com/anthropics/**",
+			"https://raw.githubusercontent.com/anthropics/**",
 		]);
 	});
 
