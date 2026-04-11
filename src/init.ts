@@ -6,17 +6,23 @@ import { initConfig } from "./config.ts";
 interface ClaudeSettings {
 	hooks?: {
 		PreToolUse?: Array<{ matcher: string; command: string }>;
+		PostToolUse?: Array<{ matcher: string; command: string }>;
 	};
 	[key: string]: unknown;
 }
 
-const HOOK_COMMAND = "cc-permission hook";
+const PRE_HOOK_COMMAND = "cc-permission hook";
+const POST_HOOK_COMMAND = "cc-permission post-hook";
 
 function getClaudeSettingsPath(): string {
 	return join(homedir(), ".claude", "settings.json");
 }
 
-function registerHook(): { registered: boolean; path: string } {
+function registerHooks(): {
+	preRegistered: boolean;
+	postRegistered: boolean;
+	path: string;
+} {
 	const path = getClaudeSettingsPath();
 	let settings: ClaudeSettings = {};
 	if (existsSync(path)) {
@@ -29,17 +35,34 @@ function registerHook(): { registered: boolean; path: string } {
 	if (!settings.hooks.PreToolUse) {
 		settings.hooks.PreToolUse = [];
 	}
-
-	const alreadyRegistered = settings.hooks.PreToolUse.some(
-		(h) => h.command === HOOK_COMMAND,
-	);
-	if (alreadyRegistered) {
-		return { registered: false, path };
+	if (!settings.hooks.PostToolUse) {
+		settings.hooks.PostToolUse = [];
 	}
 
-	settings.hooks.PreToolUse.push({ matcher: "", command: HOOK_COMMAND });
-	writeFileSync(path, JSON.stringify(settings, null, 2), "utf-8");
-	return { registered: true, path };
+	const preRegistered = !settings.hooks.PreToolUse.some(
+		(h) => h.command === PRE_HOOK_COMMAND,
+	);
+	if (preRegistered) {
+		settings.hooks.PreToolUse.push({
+			matcher: "",
+			command: PRE_HOOK_COMMAND,
+		});
+	}
+
+	const postRegistered = !settings.hooks.PostToolUse.some(
+		(h) => h.command === POST_HOOK_COMMAND,
+	);
+	if (postRegistered) {
+		settings.hooks.PostToolUse.push({
+			matcher: "",
+			command: POST_HOOK_COMMAND,
+		});
+	}
+
+	if (preRegistered || postRegistered) {
+		writeFileSync(path, JSON.stringify(settings, null, 2), "utf-8");
+	}
+	return { preRegistered, postRegistered, path };
 }
 
 export function runInit(): void {
@@ -50,10 +73,15 @@ export function runInit(): void {
 		console.log(`Config already exists: ${configResult.path}`);
 	}
 
-	const hookResult = registerHook();
-	if (hookResult.registered) {
-		console.log(`Registered hook in: ${hookResult.path}`);
+	const hookResult = registerHooks();
+	if (hookResult.preRegistered) {
+		console.log(`Registered PreToolUse hook in: ${hookResult.path}`);
 	} else {
-		console.log(`Hook already registered in: ${hookResult.path}`);
+		console.log(`PreToolUse hook already registered in: ${hookResult.path}`);
+	}
+	if (hookResult.postRegistered) {
+		console.log(`Registered PostToolUse hook in: ${hookResult.path}`);
+	} else {
+		console.log(`PostToolUse hook already registered in: ${hookResult.path}`);
 	}
 }

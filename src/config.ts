@@ -13,8 +13,16 @@ export interface Rule {
 	reason?: string;
 }
 
+export interface Template {
+	tool: string;
+	field: string;
+	match: string;
+	generate: string[];
+}
+
 export interface Config {
 	rules: Rule[];
+	templates: Template[];
 }
 
 export function getConfigDir(): string {
@@ -27,13 +35,49 @@ export function getConfigPath(): string {
 	return join(getConfigDir(), "config.json5");
 }
 
+export function getPermissionPath(): string {
+	return join(getConfigDir(), "permission.json5");
+}
+
 export function loadConfig(): Config {
 	const path = getConfigPath();
 	if (!existsSync(path)) {
-		return { rules: [] };
+		return { rules: [], templates: [] };
 	}
 	const content = readFileSync(path, "utf-8");
-	return JSON5.parse(content) as Config;
+	const parsed = JSON5.parse(content) as Partial<Config>;
+	return {
+		rules: parsed.rules ?? [],
+		templates: parsed.templates ?? [],
+	};
+}
+
+export function loadPermission(): Rule[] {
+	const path = getPermissionPath();
+	if (!existsSync(path)) {
+		return [];
+	}
+	const content = readFileSync(path, "utf-8");
+	const parsed = JSON5.parse(content) as { rules?: Rule[] };
+	return parsed.rules ?? [];
+}
+
+export function loadAllRules(): Rule[] {
+	const config = loadConfig();
+	const permission = loadPermission();
+	return [...config.rules, ...permission];
+}
+
+export function addRule(rule: Rule): void {
+	const rules = loadPermission();
+	rules.push(rule);
+	const dir = getConfigDir();
+	mkdirSync(dir, { recursive: true });
+	writeFileSync(
+		getPermissionPath(),
+		JSON5.stringify({ rules }, null, 2),
+		"utf-8",
+	);
 }
 
 const defaultConfig = `{
