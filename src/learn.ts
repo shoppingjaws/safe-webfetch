@@ -26,7 +26,6 @@ function matchTemplateToRegex(template: string): RegExp {
 			if (regex.endsWith("/")) regex = regex.slice(0, -1);
 			if (template[i] === "/") i++;
 			regex += "(/.*)?";
-
 		} else if (template[i] === "*") {
 			regex += "[^/]*";
 			i++;

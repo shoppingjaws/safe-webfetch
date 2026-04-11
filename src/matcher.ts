@@ -21,7 +21,6 @@ function globToRegex(pattern: string): RegExp {
 			if (regex.endsWith("/")) regex = regex.slice(0, -1);
 			if (pattern[i] === "/") i++;
 			regex += "(/.*)?";
-
 		} else if (char === "*") {
 			regex += "[^/]*";
 			i++;

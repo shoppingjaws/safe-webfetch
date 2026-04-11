@@ -5,11 +5,7 @@
 			"Bash(bun run test)",
 			"Bash(bun test:*)"
 		],
-		"ask": [
-			"Edit(package.json)",
-			"Edit(mise.toml)",
-			"Edit(Dockerfile.test)"
-		]
+		"ask": ["Edit(package.json)", "Edit(mise.toml)", "Edit(Dockerfile.test)"]
 	},
 	"hooks": {
 		"PreToolUse": [
