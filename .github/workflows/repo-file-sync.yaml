@@ -1,0 +1,36 @@
+name: Sync Files
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:      # Manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
+        with:
+          app-id: ${{ secrets.GHAPP_REPO_FILE_SYNC_APP_ID }}
+          private-key: ${{ secrets.GHAPP_REPO_FILE_SYNC_PRIVATE_KEY }}
+          owner: shoppingjaws
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Sync Files
+        id: sync
+        # uses: shoppingjaws/repo-file-sync@e5604c62bd42f3815674beefb2c9cdb8026d8bd8 # 1.0.0
+        uses: shoppingjaws/repo-file-sync@main
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Output results
+        if: always()
+        run: |
+          echo "Files synced: ${{ steps.sync.outputs.files-synced }}"
+          echo "PR URL: ${{ steps.sync.outputs.pr-url }}"
