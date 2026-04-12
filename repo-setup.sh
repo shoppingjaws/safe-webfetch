@@ -19,4 +19,4 @@ gh api --method POST "repos/${REPO}/environments/release/deployment-branch-polic
 # GitHub Actionsによるプルリクエスト作成・承認を許可
 gh api --method PUT "repos/${REPO}/actions/permissions/workflow" \
   --field "can_approve_pull_request_reviews=true" \
-  --field "default_workflow_permissions=write"
+  --field "default_workflow_permissions=read"
