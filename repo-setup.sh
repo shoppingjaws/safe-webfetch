@@ -3,8 +3,8 @@ set -euo pipefail
 
 # リポジトリシークレットの設定
 # op referenceは適宜埋めてください
-op read 'op://Dev/github-shoppingjaws/GHAPP_REPO_FILE_SYNC_APP_ID' | gh secret set GHAPP_REPO_FILE_SYNC_APP_ID
-op read 'op://Dev/github-shoppingjaws/repo-file-sync-shoppingjaws.private-key.pem' | gh secret set GHAPP_REPO_FILE_SYNC_PRIVATE_KEY
+gh secret set GHAPP_REPO_FILE_SYNC_APP_ID --body "$(op read 'op://Dev/github-shoppingjaws/GHAPP_REPO_FILE_SYNC_APP_ID')"
+gh secret set GHAPP_REPO_FILE_SYNC_PRIVATE_KEY --body "$(op read 'op://Dev/github-shoppingjaws/GHAPP_REPO_FILE_SYNC_PRIVATE_KEY')"
 
 gh variable set NPM_REGISTORY_NAME --body $NPM_REGISTORY_NAME
 
