@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "automerge": true,
+  "automergeType": "pr",
+  "platformAutomerge": false,
+  "mise": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "minor・patchは自動マージ",
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin"],
+      "automerge": true
+    },
+    {
+      "description": "majorはレビュー必須",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ]
+}
