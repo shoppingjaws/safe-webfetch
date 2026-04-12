@@ -2,6 +2,6 @@ repos:
   shoppingjaws/template-bun:
     files:
       - .github/repo-file-sync.yaml
-      - .github/workflows/release.yaml
+      # - .github/workflows/release.yaml  # GitHub Appトークンにworkflows権限がないため除外
       - renovate.json
       - repo-setup.sh
