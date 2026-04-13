@@ -2,8 +2,10 @@ repos:
   shoppingjaws/template-bun:
     files:
       - .github/repo-file-sync.yaml
+      - .github/workflows/repo-file-sync.yaml
       - .github/workflows/release.yaml
       - renovate.json
       - .mise/config.toml # for Organization level mise sync
       - biome.json
+      - .claude/settings.json
       - repo-setup.sh
