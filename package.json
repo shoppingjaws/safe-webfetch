@@ -1,6 +1,6 @@
 {
 	"name": "safe-webfetch",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Claude Code permission prompt controller - auto allow/deny via pattern matching hooks",
 	"type": "module",
 	"bin": {
