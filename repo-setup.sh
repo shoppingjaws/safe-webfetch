@@ -20,3 +20,6 @@ gh api --method POST "repos/${REPO}/environments/release/deployment-branch-polic
 gh api --method PUT "repos/${REPO}/actions/permissions/workflow" \
   --field "can_approve_pull_request_reviews=true" \
   --field "default_workflow_permissions=read"
+
+# マージ時にブランチを自動削除
+gh api --method PATCH "repos/${REPO}" --field "delete_branch_on_merge=true"
