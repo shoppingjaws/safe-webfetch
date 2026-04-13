@@ -4,4 +4,6 @@ repos:
       - .github/repo-file-sync.yaml
       - .github/workflows/release.yaml
       - renovate.json
+      - .mise/config.toml # for Organization level mise sync
+      - biome.json
       - repo-setup.sh
