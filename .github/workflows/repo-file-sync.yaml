@@ -28,6 +28,9 @@ jobs:
         uses: shoppingjaws/repo-file-sync@main
         with:
           token: ${{ steps.app-token.outputs.token }}
+          branch-name: develop/repo-file-sync
+          commit-message: repo-file-sync
+          pr-title: "[reop-file-sync] Syncronization"
 
       - name: Output results
         if: always()
