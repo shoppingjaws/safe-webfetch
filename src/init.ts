@@ -22,8 +22,8 @@ interface ClaudeSettings {
 	[key: string]: unknown;
 }
 
-const PRE_HOOK_COMMAND = "safe-webfetch hook";
-const POST_HOOK_COMMAND = "safe-webfetch post-hook";
+const PRE_HOOK_COMMAND = "bunx safe-webfetch hook";
+const POST_HOOK_COMMAND = "bunx safe-webfetch post-hook";
 
 function getClaudeSettingsPath(): string {
 	return join(homedir(), ".claude", "settings.json");
