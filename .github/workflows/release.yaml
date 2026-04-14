@@ -102,8 +102,8 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: bun pm pack
-      - run: bunx npm@latest publish ./${{ vars.NPM_REGISTRY_NAME }}-${{ needs.check-version.outputs.version }}.tgz --provenance --access public
+      - run: npm pack
+      - run: npm publish ./${{ vars.NPM_REGISTRY_NAME }}-${{ needs.check-version.outputs.version }}.tgz --provenance --access public
 
   release:
     needs: [check-version, build]
