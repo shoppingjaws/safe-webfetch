@@ -22,20 +22,29 @@ PostToolUse hook  → テンプレート学習 → 新ルールを permission.js
 
 ## インストール
 
+### mise（推奨）
+
 ```bash
-# リポジトリをクローン
+mise use ubi:shoppingjaws/safe-webfetch
+```
+
+GitHub Releases からコンパイル済みバイナリをダウンロードします。ランタイムのインストールは不要です。
+
+### npm（Bun ランタイムが必要）
+
+```bash
+npm install -g safe-webfetch
+```
+
+Bun 固有の API を使用しているため、[Bun](https://bun.sh/) のインストールが必要です。
+
+### ソースからビルド
+
+```bash
 git clone https://github.com/shoppingjaws/safe-webfetch.git
 cd safe-webfetch
-
-# 依存関係のインストール
 bun install
-
-# ビルド（任意: コンパイル済みバイナリを生成）
 bun run build   # → dist/safe-webfetch
-
-# PATH の通った場所にリンクまたはコピー
-bun link
-# または
 cp dist/safe-webfetch ~/.local/bin/
 ```
 

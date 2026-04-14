@@ -24,17 +24,29 @@ PostToolUse hook  → template learning → append new rules to permission.json
 
 ## Installation
 
+### mise (recommended)
+
+```bash
+mise use ubi:shoppingjaws/safe-webfetch
+```
+
+Downloads a precompiled binary from GitHub Releases. No runtime dependencies required.
+
+### npm (requires Bun runtime)
+
+```bash
+npm install -g safe-webfetch
+```
+
+Requires [Bun](https://bun.sh/) to be installed, as the package uses Bun-specific APIs.
+
+### Build from source
+
 ```bash
 git clone https://github.com/shoppingjaws/safe-webfetch.git
 cd safe-webfetch
 bun install
-
-# Build a standalone binary (optional)
 bun run build   # → dist/safe-webfetch
-
-# Make it available on PATH
-bun link
-# or
 cp dist/safe-webfetch ~/.local/bin/
 ```
 
