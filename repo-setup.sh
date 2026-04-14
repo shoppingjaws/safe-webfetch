@@ -6,7 +6,7 @@ set -euo pipefail
 op read 'op://Dev/github-shoppingjaws/GHAPP_REPO_FILE_SYNC_APP_ID' | gh secret set GHAPP_REPO_FILE_SYNC_APP_ID
 op read 'op://Dev/github-shoppingjaws/repo-file-sync-shoppingjaws.private-key.pem' | gh secret set GHAPP_REPO_FILE_SYNC_PRIVATE_KEY
 
-gh variable set NPM_REGISTORY_NAME --body $NPM_REGISTORY_NAME
+gh variable set NPM_REGISTRY_NAME --body $NPM_REGISTRY_NAME
 
 # release環境の作成（mainブランチのみアクセス可）
 REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
