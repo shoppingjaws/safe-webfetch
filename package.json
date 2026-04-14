@@ -10,9 +10,9 @@
 		"dist"
 	],
 	"repository": {
-    "type": "git",
-    "url": "https://github.com/shoppingjaws/safe-webfetch"
-  },
+		"type": "git",
+		"url": "https://github.com/shoppingjaws/safe-webfetch"
+	},
 	"scripts": {
 		"test": "bun test",
 		"format": "biome format --write",
@@ -20,8 +20,9 @@
 		"lint": "biome lint --fix",
 		"lint:check": "biome lint",
 		"typecheck": "tsc --noEmit",
-		"build": "bun build ./src/cli.ts --outdir ./dist --target node",
-		"prepublishOnly": "bun run build"
+		"build": "bun build --compile ./src/cli.ts --outfile ./dist/safe-webfetch",
+		"build:npm": "bun build ./src/cli.ts --outdir ./dist --target bun",
+		"prepublishOnly": "bun run build:npm"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"

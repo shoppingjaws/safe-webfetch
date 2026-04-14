@@ -1,10 +1,9 @@
-name: NPM Publish
+name: Release
 
 on:
   push:
     branches:
       - main
-
 
 jobs:
   check-version:
@@ -39,12 +38,48 @@ jobs:
             echo "should-publish=false" >> $GITHUB_OUTPUT
           fi
 
-  publish:
+  build:
+    needs: check-version
+    if: needs.check-version.outputs.should-publish == 'true'
+    strategy:
+      matrix:
+        include:
+          - target: bun-linux-x64
+            os: ubuntu-latest
+            artifact: ${{ vars.NPM_REGISTRY_NAME }}-linux-x64
+          - target: bun-darwin-arm64
+            os: macos-latest
+            artifact: ${{ vars.NPM_REGISTRY_NAME }}-darwin-arm64
+          - target: bun-darwin-x64
+            os: macos-latest
+            artifact: ${{ vars.NPM_REGISTRY_NAME }}-darwin-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+
+      - name: Install tools via mise
+        run: mise install
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build binary
+        run: bun build --compile --target ${{ matrix.target }} ./src/cli.ts --outfile ./dist/${{ matrix.artifact }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ./dist/${{ matrix.artifact }}
+
+  publish-npm:
     needs: check-version
     if: needs.check-version.outputs.should-publish == 'true'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -58,17 +93,30 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build package
-        run: bun run build
+      - name: Build for npm
+        run: bun run build:npm
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
       - run: bun pm pack
-      - run: bunx npm@latest publish ./kzdiff-${{ needs.check-version.outputs.version }}.tgz --provenance
+      - run: bunx npm@latest publish ./${{ vars.NPM_REGISTRY_NAME }}-${{ needs.check-version.outputs.version }}.tgz --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    needs: [check-version, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -78,3 +126,7 @@ jobs:
           draft: false
           prerelease: false
           generate_release_notes: true
+          files: |
+            ./artifacts/${{ vars.NPM_REGISTRY_NAME }}-linux-x64/${{ vars.NPM_REGISTRY_NAME }}-linux-x64
+            ./artifacts/${{ vars.NPM_REGISTRY_NAME }}-darwin-arm64/${{ vars.NPM_REGISTRY_NAME }}-darwin-arm64
+            ./artifacts/${{ vars.NPM_REGISTRY_NAME }}-darwin-x64/${{ vars.NPM_REGISTRY_NAME }}-darwin-x64
