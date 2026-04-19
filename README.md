@@ -125,8 +125,8 @@ If a rule matches, the request is allowed. If no rule matches, Claude Code shows
 
 - **GitHub** — `github.com/{org}/**` + `raw.githubusercontent.com/{org}/**`
 - **docs.\* sites** — `docs.{domain}/**` (AWS, Datadog, GCP, etc.)
-- **npm** — `npmjs.com/package/{pkg}/**` + `registry.npmjs.org/{pkg}/**`
-- **npm (scoped)** — `npmjs.com/package/@{scope}/{pkg}/**`
+- **npm** — `www.npmjs.com/package/{pkg}/**` + `registry.npmjs.org/{pkg}/**`
+- **npm (scoped)** — `www.npmjs.com/package/@{scope}/{pkg}/**` + `registry.npmjs.org/@{scope}/{pkg}/**`
 - **PyPI** — `pypi.org/project/{pkg}/**`
 - **crates.io** — `crates.io/crates/{crate}/**` + `docs.rs/{crate}/**`
 - **pkg.go.dev** — `pkg.go.dev/{module}/**`

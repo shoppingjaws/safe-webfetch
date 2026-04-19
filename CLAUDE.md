@@ -22,7 +22,7 @@ bun run build             # compile to dist/safe-webfetch
 ## Architecture
 
 ```
-cli.ts  ─┬─  hook      → hook.ts (runHook)      → PreToolUse: ルールマッチング → allow/deny/pass
+cli.ts  ─┬─  hook      → hook.ts (runHook)      → PreToolUse: ルールマッチング → allow/pass
           ├─  post-hook → hook.ts (runPostHook)  → PostToolUse: テンプレート学習 → permission.json に追記
           └─  init      → init.ts                → config初期化 + ~/.claude/settings.json にhook登録
 ```
