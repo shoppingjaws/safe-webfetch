@@ -18,7 +18,7 @@ export async function runHook(): Promise<void> {
 	const allRules = loadAllRules();
 	const result = matchRule(input, allRules);
 	await log("hook:result", result);
-	if (result.decision === "allow") {
+	if (result.hookSpecificOutput?.permissionDecision === "allow") {
 		process.stderr.write(
 			`[safe-webfetch] auto-allowed: ${input.tool_name} (${result.matchedPattern})\n`,
 		);
