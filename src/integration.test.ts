@@ -23,7 +23,14 @@ describe("hook (PreToolUse)", () => {
 			},
 		});
 
-		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
+		expect(JSON.parse(stdout)).toEqual({
+			hookSpecificOutput: {
+				hookEventName: "PreToolUse",
+				permissionDecision: "allow",
+				permissionDecisionReason:
+					"matched rule: https://github.com/shoppingjaws/**",
+			},
+		});
 	});
 
 	test("returns empty for non-matching URL", async () => {
@@ -51,7 +58,14 @@ describe("hook (PreToolUse)", () => {
 			tool_input: { url: "https://github.com/shoppingjaws" },
 		});
 
-		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
+		expect(JSON.parse(stdout)).toEqual({
+			hookSpecificOutput: {
+				hookEventName: "PreToolUse",
+				permissionDecision: "allow",
+				permissionDecisionReason:
+					"matched rule: https://github.com/shoppingjaws/**",
+			},
+		});
 	});
 
 	test("allows base path with trailing slash for /** pattern", async () => {
@@ -65,7 +79,14 @@ describe("hook (PreToolUse)", () => {
 			tool_input: { url: "https://github.com/shoppingjaws/" },
 		});
 
-		expect(JSON.parse(stdout)).toEqual({ decision: "allow" });
+		expect(JSON.parse(stdout)).toEqual({
+			hookSpecificOutput: {
+				hookEventName: "PreToolUse",
+				permissionDecision: "allow",
+				permissionDecisionReason:
+					"matched rule: https://github.com/shoppingjaws/**",
+			},
+		});
 	});
 
 	test("returns empty when no config exists", async () => {
@@ -195,7 +216,13 @@ describe("post-hook (PostToolUse)", () => {
 			tool_name: "WebFetch",
 			tool_input: { url: "https://github.com/xxx/another-repo" },
 		});
-		expect(JSON.parse(after.stdout)).toEqual({ decision: "allow" });
+		expect(JSON.parse(after.stdout)).toEqual({
+			hookSpecificOutput: {
+				hookEventName: "PreToolUse",
+				permissionDecision: "allow",
+				permissionDecisionReason: "matched rule: https://github.com/xxx/**",
+			},
+		});
 	});
 });
 

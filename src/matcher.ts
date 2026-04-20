@@ -5,8 +5,14 @@ export interface HookInput {
 	tool_input: Record<string, unknown>;
 }
 
+export interface HookSpecificOutput {
+	hookEventName: "PreToolUse";
+	permissionDecision: "allow";
+	permissionDecisionReason: string;
+}
+
 export interface HookOutput {
-	decision?: "allow";
+	hookSpecificOutput?: HookSpecificOutput;
 	/** Matched rule pattern (for logging, not included in JSON output) */
 	matchedPattern?: string;
 }
@@ -42,7 +48,11 @@ export function matchRule(input: HookInput, rules: Rule[]): HookOutput {
 			if (typeof value !== "string") continue;
 			if (regex.test(value)) {
 				return {
-					decision: "allow",
+					hookSpecificOutput: {
+						hookEventName: "PreToolUse",
+						permissionDecision: "allow",
+						permissionDecisionReason: `matched rule: ${rule.pattern}`,
+					},
 					matchedPattern: rule.pattern,
 				};
 			}
